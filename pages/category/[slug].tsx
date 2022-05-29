@@ -4,26 +4,30 @@ import { Navbar } from '../../components'
 import {
   getCategories,
   getPostsByCategories,
+  getSingleCategory,
   sanityClient,
   urlFor,
 } from '../../services/sanity'
 import { Categories, Post } from '../../typings'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import Moment from 'react-moment'
 
 interface Props {
   posts: Post[]
+  category: Categories
 }
 
-const Post = ({ posts }: Props) => {
+const Post = ({ posts, category }: Props) => {
   const router = useRouter()
   return (
     <main>
       <Navbar />
       <div className=" container mx-auto  w-full max-w-7xl gap-10 overflow-hidden py-4 px-2 md:py-8 md:px-5">
-        <h2 className=" mb-5 py-5 text-4xl font-semibold capitalize tracking-wide">
+        <h2 className=" mb-2 py-5 text-4xl font-semibold capitalize tracking-wide">
           {router?.query?.slug}
         </h2>
+        <p className=" mb-3 text-lg font-medium">{category.description}</p>
         <div className=" w-full">
           {posts.map((post) => (
             <div
@@ -51,15 +55,17 @@ const Post = ({ posts }: Props) => {
                 </Link>
                 <h4 className="hidden sm:block">{post.description}</h4>
                 <p className=" flex flex-wrap items-center gap-2 text-sm text-gray-400 md:gap-5">
-                  <span>date</span>
+                  <Moment format="D MMM">{post._createdAt}</Moment>
                   <span>2 mins read</span>
                   <span className=" flex items-center gap-2 md:gap-5">
                     {post.categories.map((category) => (
-                      <Link href={`/category/${category.title}`}>
-                        <button className=" rounded-full bg-gray-200 px-3 py-1 hover:bg-gray-300">
-                          {category.title}
-                        </button>
-                      </Link>
+                      <span key={category._id}>
+                        <Link href={`/category/${category.title}`}>
+                          <button className=" rounded-full bg-gray-200 px-3 py-1 hover:bg-gray-300">
+                            {category.title}
+                          </button>
+                        </Link>
+                      </span>
                     ))}
                   </span>
                 </p>
@@ -89,6 +95,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const post = await sanityClient.fetch(getPostsByCategories, {
     category: params?.slug,
   })
+  const category = await sanityClient.fetch(getSingleCategory, {
+    slug: params?.slug,
+  })
   if (!post) {
     return {
       notFound: true,
@@ -97,6 +106,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       posts: post,
+      category,
     },
     revalidate: 60,
   }

@@ -7,6 +7,7 @@ export interface Post {
     image: string
     _id: string
     slug: string
+    bio: [object]
   }
   description: string
   mainImage: {
@@ -24,6 +25,7 @@ export interface Post {
 export interface Categories {
   title: string
   _id: string
+  description: string
 }
 export interface Authors {
   name: string
@@ -31,6 +33,7 @@ export interface Authors {
   slug: {
     current: string
   }
+  bio: [object]
 }
 export interface Comment {
   approved: boolean

@@ -72,6 +72,12 @@ export const getCategories = groq`
   _id
 }
 `
+export const getSingleCategory = groq`
+*[_type == "category" && title == $slug][0] {
+  title,
+  _id,
+  description
+}`
 
 export const getPostsByCategories = groq`
 *[_type == "post" && $category in categories[]->title ] {
@@ -83,7 +89,8 @@ export const getPostsByCategories = groq`
     mainImage,
     categories[]->{
       _id,
-      title
+      title,
+      description
     },
     author->{
       _id,
@@ -108,7 +115,7 @@ export const getPostsByAuthor = groq`
       _id,
       name,
       image,
-      description
+      bio
     },
     "slug": slug.current
 } 

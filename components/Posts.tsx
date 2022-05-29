@@ -1,5 +1,7 @@
+import moment from 'moment'
 import Image from 'next/image'
 import Link from 'next/link'
+import Moment from 'react-moment'
 import { urlFor } from '../services/sanity'
 import { Categories, Post } from '../typings'
 interface Props {
@@ -36,15 +38,17 @@ const Posts = ({ posts, categories }: Props) => {
               </Link>
               <h4 className="hidden sm:block">{post.description}</h4>
               <p className=" flex flex-wrap items-center gap-2 text-sm text-gray-400 md:gap-5">
-                <span>date</span>
+                <Moment format="D MMM">{post._createdAt}</Moment>
                 <span>2 mins read</span>
                 <span className=" flex items-center gap-2 md:gap-5">
                   {post.categories.map((category) => (
-                    <Link href={`/category/${category.title}`}>
-                      <button className=" rounded-full bg-gray-200 px-3 py-1 hover:bg-gray-300">
-                        {category.title}
-                      </button>
-                    </Link>
+                    <span key={category._id}>
+                      <Link href={`/category/${category.title}`}>
+                        <button className=" rounded-full bg-gray-200 px-3 py-1 hover:bg-gray-300">
+                          {category.title}
+                        </button>
+                      </Link>
+                    </span>
                   ))}
                 </span>
               </p>
@@ -71,14 +75,16 @@ const Posts = ({ posts, categories }: Props) => {
           </h3>
           <div className=" flex flex-wrap items-center gap-3">
             {categories.map((category) => (
-              <Link href={`/category/${category.title}`}>
-                <button
-                  key={category._id}
-                  className=" rounded border border-gray-200 px-4 py-2"
-                >
-                  {category.title}
-                </button>
-              </Link>
+              <span key={category._id}>
+                <Link href={`/category/${category.title}`}>
+                  <button
+                    key={category._id}
+                    className=" rounded border border-gray-200 px-4 py-2"
+                  >
+                    {category.title}
+                  </button>
+                </Link>
+              </span>
             ))}
           </div>
         </div>

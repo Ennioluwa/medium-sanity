@@ -3,6 +3,7 @@ import { Post } from '../typings'
 import { IoIosTrendingUp } from 'react-icons/io'
 import Link from 'next/link'
 import Image from 'next/image'
+import Moment from 'react-moment'
 interface Props {
   posts: [Post]
 }
@@ -48,7 +49,7 @@ const Trending = ({ posts }: Props) => {
                       {post.title}
                     </h3>
                   </Link>
-                  <p>{new Date(_createdAt).toLocaleDateString()}</p>
+                  <Moment format="D MMM">{post._createdAt}</Moment>
                 </div>
               </div>
             )
